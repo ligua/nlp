@@ -35,6 +35,9 @@ if config.USE_CORNELL:
 else:
     import our_data as data
 
+epoch = 0
+stop = True
+
 def _get_random_bucket(train_buckets_scale):
     """ Get a random bucket from which to choose a training sample """
     rand = random.random()
@@ -150,7 +153,10 @@ def train():
 
         iteration = model.global_step.eval()
         total_loss = 0
-        while True:
+        while stop :
+            epoch += 1
+            if epoch == 100000:
+                break
             skip_step = _get_skip_step(iteration)
             bucket_id = _get_random_bucket(train_buckets_scale)
             encoder_inputs, decoder_inputs, decoder_masks = data.get_batch(data_buckets[bucket_id],
